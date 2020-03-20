@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="libs">
+      <UniqueIdentifier>{2F149A7C-1B4B-9B0D-C437-8110B04D170F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\tinyobjloader">
+      <UniqueIdentifier>{B4350D0A-A019-CE5F-097A-C8B2F57CB8E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="libs\tinyobjloader\tiny_obj_loader.h">
+      <Filter>libs\tinyobjloader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dx12_labs.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\win32_window.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\renderer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\win32_window.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\win32_window_main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

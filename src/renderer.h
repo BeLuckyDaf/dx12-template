@@ -22,8 +22,8 @@ public:
 	virtual void OnRender();
 	virtual void OnDestroy();
 
-	virtual void OnKeyDown(UINT8 key) {};
-	virtual void OnKeyUp(UINT8 key) {};
+	virtual void OnKeyDown(UINT8 key) { };
+	virtual void OnKeyUp(UINT8 key) { };
 
 	UINT GetWidth() const { return width; }
 	UINT GetHeight() const { return height; }
