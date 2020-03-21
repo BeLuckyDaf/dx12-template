@@ -14,6 +14,10 @@ public:
 		vertex_buffer_view = {};
 		fence_value = 0;
 		fence_event = nullptr;
+		vertices.clear();
+		mwp = XMMatrixIdentity();
+		aspect_ratio = static_cast<float>(width) / static_cast<float>(height);
+		delta_x = delta_y = delta_z = 0;
 	};
 	virtual ~Renderer() {};
 
@@ -22,8 +26,8 @@ public:
 	virtual void OnRender();
 	virtual void OnDestroy();
 
-	virtual void OnKeyDown(UINT8 key) { };
-	virtual void OnKeyUp(UINT8 key) { };
+	virtual void OnKeyDown(UINT8 key);
+	virtual void OnKeyUp(UINT8 key);
 
 	UINT GetWidth() const { return width; }
 	UINT GetHeight() const { return height; }
@@ -34,6 +38,8 @@ protected:
 	UINT height;
 	std::wstring title;
 
+	FLOAT delta_x, delta_y, delta_z;
+	FLOAT aspect_ratio;
 	static const UINT frame_number = 2;
 
 	// Pipeline objects.
@@ -41,6 +47,7 @@ protected:
 	ComPtr<ID3D12CommandQueue> command_queue;
 	ComPtr<IDXGISwapChain3> swap_chain;
 	ComPtr<ID3D12DescriptorHeap> rtv_heap;
+	ComPtr<ID3D12DescriptorHeap> cbv_heap;
 	UINT rtv_descriptor_size;
 	ComPtr<ID3D12Resource> render_targets[frame_number];
 	ComPtr<ID3D12CommandAllocator> command_allocator;
@@ -54,6 +61,11 @@ protected:
 	// Resources
 	ComPtr<ID3D12Resource> vertex_buffer;
 	D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view;
+	std::vector<ColorVertex> vertices;
+
+	XMMATRIX  mwp;
+	ComPtr<ID3D12Resource> constant_buffer;
+	UINT8* constant_buffer_data_begin;
 
 	// Synchronization objects.
 	UINT frame_index;
