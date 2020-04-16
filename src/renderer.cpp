@@ -11,11 +11,15 @@ void Renderer::OnInit()
 
 void Renderer::OnUpdate()
 {
-	XMMATRIX world = XMMatrixTranslation(0.f, -0.5f, 0.f) * XMMatrixScaling(0.5f, 0.5f, 0.5f);
-	XMMATRIX view = XMMatrixLookToLH({ 0.f, 1.1f, 2.f }, { 0.f, 1.f, -1.f }, { 0.f, 1.f, 0.f });
-	XMMATRIX projection = XMMatrixOrthographicLH(width, height, 0.1f, 100.f);
-	//XMMATRIX projection = XMMatrixPerspectiveFovLH(60.f * XM_PI / 180.f, aspect_ratio, 0.1f, 100.f);
-	mwp = world;
+	angle += delta_rotation;
+	eye_position += XMVECTOR{ sin(angle), 0, cos(angle) } * delta_forward;
+	eye_position += XMVECTOR{ 0.f, 1.f, 0.f } * delta_height;
+
+	XMVECTOR focusPos = eye_position + XMVECTOR{ sin(angle), 0.f, cos(angle) };
+
+	XMVECTOR upDirection = { 0.f, 1.f, 0.f };
+	view = XMMatrixLookAtLH(eye_position, focusPos, upDirection);
+	mwp = world * view * projection;
 	memcpy(constant_buffer_data_begin, &mwp, sizeof(mwp));
 }
 
@@ -39,48 +43,55 @@ void Renderer::OnDestroy()
 
 void Renderer::OnKeyDown(UINT8 key)
 {
-	switch (key) {
-	case VK_LEFT:
-		delta_x = 0.0001f;
+	switch (key)
+	{
+	case 0x41 - 'a' + 'w':
+		delta_forward = 0.001f;
 		break;
-	case VK_RIGHT:
-		delta_x = -0.0001f;
+	case 0x41 - 'a' + 's':
+		delta_forward = -0.001f;
 		break;
-	case VK_UP:
-		delta_y = -0.0001f;
+	case 0x41 - 'a' + 'd':
+		delta_rotation = 0.001f;
 		break;
-	case VK_DOWN:
-		delta_y = 0.0001f;
+	case 0x41 - 'a' + 'a':
+		delta_rotation = -0.001f;
 		break;
-	case VK_HOME:
-		delta_z = -0.0001f;
+	case 0x41 - 'a' + 'z':
+		delta_height = 0.001f;
 		break;
-	case VK_END:
-		delta_z = 0.0001f;
+	case 0x41 - 'a' + 'x':
+		delta_height = -0.001f;
+		break;
+	default:
 		break;
 	}
+
 }
 
 void Renderer::OnKeyUp(UINT8 key)
 {
-	switch (key) {
-	case VK_LEFT:
-		delta_x = 0.f;
+	switch (key)
+	{
+	case 0x41 - 'a' + 'w':
+		delta_forward = 0.f;
 		break;
-	case VK_RIGHT:
-		delta_x = 0.f;
+	case 0x41 - 'a' + 's':
+		delta_forward = 0.f;
 		break;
-	case VK_UP:
-		delta_y = 0.f;
+	case 0x41 - 'a' + 'd':
+		delta_rotation = 0.f;
 		break;
-	case VK_DOWN:
-		delta_y = 0.f;
+	case 0x41 - 'a' + 'a':
+		delta_rotation = 0.f;
 		break;
-	case VK_HOME:
-		delta_z = 0.f;
+	case 0x41 - 'a' + 'z':
+		delta_height = 0.f;
 		break;
-	case VK_END:
-		delta_z = 0.f;
+	case 0x41 - 'a' + 'x':
+		delta_height = 0.f;
+		break;
+	default:
 		break;
 	}
 }

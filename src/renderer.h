@@ -4,8 +4,7 @@
 
 #include "win32_window.h"
 
-class Renderer
-{
+class Renderer {
 public:
 	Renderer(UINT width, UINT height) : width(width), height(height), title(L"DX12 renderer"), frame_index(0), rtv_descriptor_size(0)
 	{
@@ -14,10 +13,16 @@ public:
 		vertex_buffer_view = {};
 		fence_value = 0;
 		fence_event = nullptr;
-		vertices.clear();
-		mwp = XMMatrixIdentity();
 		aspect_ratio = static_cast<float>(width) / static_cast<float>(height);
-		delta_x = delta_y = delta_z = 0;
+		vertices.clear();
+
+		mwp = XMMatrixIdentity();
+		world = XMMatrixTranslation(0.f, 0.f, 0.f) * XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		view = XMMatrixIdentity();
+		eye_position = { 0.f, 1.f, 0.f };
+		//projection = XMMatrixIdentity();
+		projection = XMMatrixPerspectiveFovLH(60.f * XM_PI / 180.f, aspect_ratio, 0.001f, 100.f);
+
 	};
 	virtual ~Renderer() {};
 
@@ -38,8 +43,6 @@ protected:
 	UINT height;
 	std::wstring title;
 
-	FLOAT delta_x, delta_y, delta_z;
-	FLOAT aspect_ratio;
 	static const UINT frame_number = 2;
 
 	// Pipeline objects.
@@ -59,19 +62,31 @@ protected:
 	CD3DX12_RECT scissor_rect;
 
 	// Resources
+	std::vector<ColorVertex> vertices;
 	ComPtr<ID3D12Resource> vertex_buffer;
 	D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view;
-	std::vector<ColorVertex> vertices;
 
-	XMMATRIX  mwp;
 	ComPtr<ID3D12Resource> constant_buffer;
 	UINT8* constant_buffer_data_begin;
+
+	XMMATRIX mwp;
+	XMMATRIX world;
+	XMMATRIX view;
+	XMMATRIX projection;
+
+	XMVECTOR eye_position;
+	float angle = 0.f;
+	float delta_forward = 0.f;
+	float delta_rotation = 0.f;
+	float delta_height = 0.f;
 
 	// Synchronization objects.
 	UINT frame_index;
 	HANDLE fence_event;
 	ComPtr<ID3D12Fence> fence;
 	UINT64 fence_value;
+
+	float aspect_ratio;
 
 	void LoadPipeline();
 	void LoadAssets();
